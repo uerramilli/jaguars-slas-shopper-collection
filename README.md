@@ -3,6 +3,7 @@ Download SLAS Jaguars Shopper API Usage.postman_collection.json collection and i
 
 Useful Docs:
 https://developer.salesforce.com/docs/commerce/commerce-api/references?meta=shopper-login:Summary
+
 https://developer.salesforce.com/docs/commerce/commerce-api/guide/auth-z-scope-catalog.html
 
 

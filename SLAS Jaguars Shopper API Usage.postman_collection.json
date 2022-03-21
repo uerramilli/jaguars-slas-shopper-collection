@@ -1,0 +1,740 @@
+{
+	"info": {
+		"_postman_id": "36d3512b-f1ad-4761-ad76-a87f9a4c41cd",
+		"name": "SLAS Jaguars Shopper API Usage",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1a. Authorize Guest",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function generateCodeVerifier() {",
+							"    return generateRandomString(96);",
+							"}",
+							"function generateRandomString(length) {",
+							"    var text = \"\";",
+							"    var possible = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\";",
+							"    for (var i = 0; i < length; i++) {",
+							"        text += possible.charAt(Math.floor(Math.random() * possible.length));",
+							"    }",
+							"    return text;",
+							"}",
+							"function generateCodeChallenge(code_verifier) {",
+							"    return CryptoJS.SHA256(code_verifier);",
+							"}",
+							"function base64URL(string) {",
+							"    return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\\+/g, '-').replace(/\\//g, '_')",
+							"}",
+							"var verifier = base64URL(generateCodeVerifier());",
+							"var challenge = base64URL(generateCodeChallenge(verifier));",
+							"pm.collectionVariables.set(\"PUBLIC_GUEST_CODE_VERIFIER\", verifier);",
+							"pm.collectionVariables.set(\"PUBLIC_GUEST_CODE_CHALLENGE\", challenge);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"accept-encoding": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "client_id",
+							"value": "46f446f3-539c-45f6-aee4-32a8cecdd14c",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://0dnz6oep.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/f_ecom_zzcu_056/oauth2/authorize?redirect_uri=https://localhost:5001/v1/auth/verify&hint=guest&code_challenge={{PUBLIC_GUEST_CODE_CHALLENGE}}&response_type=code&channel_id=RefArch&client_id=46f446f3-539c-45f6-aee4-32a8cecdd14c&state=client-state",
+					"protocol": "https",
+					"host": [
+						"0dnz6oep",
+						"api",
+						"commercecloud",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"shopper",
+						"auth",
+						"v1",
+						"organizations",
+						"f_ecom_zzcu_056",
+						"oauth2",
+						"authorize"
+					],
+					"query": [
+						{
+							"key": "redirect_uri",
+							"value": "https://localhost:5001/v1/auth/verify"
+						},
+						{
+							"key": "hint",
+							"value": "guest"
+						},
+						{
+							"key": "code_challenge",
+							"value": "{{PUBLIC_GUEST_CODE_CHALLENGE}}"
+						},
+						{
+							"key": "response_type",
+							"value": "code"
+						},
+						{
+							"key": "channel_id",
+							"value": "RefArch"
+						},
+						{
+							"key": "client_id",
+							"value": "46f446f3-539c-45f6-aee4-32a8cecdd14c"
+						},
+						{
+							"key": "state",
+							"value": "client-state"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "1b. Authenticate Customer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function generateCodeVerifier() {",
+							"    return generateRandomString(96);",
+							"}",
+							"function generateRandomString(length) {",
+							"    var text = \"\";",
+							"    var possible = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\";",
+							"    for (var i = 0; i < length; i++) {",
+							"        text += possible.charAt(Math.floor(Math.random() * possible.length));",
+							"    }",
+							"    return text;",
+							"}",
+							"function generateCodeChallenge(code_verifier) {",
+							"    return CryptoJS.SHA256(code_verifier);",
+							"}",
+							"function base64URL(string) {",
+							"    return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\\+/g, '-').replace(/\\//g, '_')",
+							"}",
+							"var verifier = base64URL(generateCodeVerifier());",
+							"var challenge = base64URL(generateCodeChallenge(verifier));",
+							"pm.collectionVariables.set(\"PUBLIC_GUEST_CODE_VERIFIER\", verifier);",
+							"pm.collectionVariables.set(\"PUBLIC_GUEST_CODE_CHALLENGE\", challenge);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic bGVnZW5kQHNsZWVweWhvbGxvdy5jb206ITIwU3VtbWVy",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "46f446f3-539c-45f6-aee4-32a8cecdd14c",
+							"type": "text"
+						},
+						{
+							"key": "response_type",
+							"value": "code",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://localhost:5001/v1/auth/verify",
+							"type": "text"
+						},
+						{
+							"key": "channel_id",
+							"value": "RefArch",
+							"type": "text"
+						},
+						{
+							"key": "code_challenge",
+							"value": "{{PUBLIC_GUEST_CODE_CHALLENGE}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": "https://0dnz6oep.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/zzcu_056/oauth2/login"
+			},
+			"response": []
+		},
+		{
+			"name": "1c. Token - Copy Code & USID from 1a/1b response header Location field",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"custOauthToken\", pm.response.headers.get(\"access_token\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Basic NDZmNDQ2ZjMtNTM5Yy00NWY2LWFlZTQtMzJhOGNlY2RkMTRjOkhkc29hdzEyMyM="
+					},
+					{
+						"key": "Content_Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "authorization_code_pkce",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "uTeNhewF-pz6-PeyFa4WePPi8VyofstpXwu7iryO35Q",
+							"type": "text"
+						},
+						{
+							"key": "usid",
+							"value": "6d123ad3-2a6f-4af4-bc85-14bd4ebfe38c",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://localhost:5001/v1/auth/verify",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "46f446f3-539c-45f6-aee4-32a8cecdd14c",
+							"type": "text"
+						},
+						{
+							"key": "code_verifier",
+							"value": "{{PUBLIC_GUEST_CODE_VERIFIER}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://0dnz6oep.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/f_ecom_zzcu_056/oauth2/token",
+					"protocol": "https",
+					"host": [
+						"0dnz6oep",
+						"api",
+						"commercecloud",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"shopper",
+						"auth",
+						"v1",
+						"organizations",
+						"f_ecom_zzcu_056",
+						"oauth2",
+						"token"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"disabled": true
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://localhost:5001/v1/auth/verify",
+							"disabled": true
+						},
+						{
+							"key": "code ",
+							"value": "l1MEesToaFPjhI-YviQCTz-FvYrdqRGuwWQImH_817s",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2a: Get Shopper Products -Copy Bearer Token from 1c & pass to Authorization",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ2ZXIiOiIxLjAiLCJraWQiOiIxODVkYjQ0Ny01NDAwLTQyNDQtOGJkNy01MzYzNGY4ODMyYjEiLCJ0eXAiOiJqd3QiLCJjbHYiOiJKMi4zLjQiLCJhbGciOiJFUzI1NiJ9.eyJhdXQiOiJHVUlEIiwic2NwIjoic2ZjYy5zaG9wcGVyLW15YWNjb3VudC5iYXNrZXRzIHNmY2Muc2hvcHBlci1teWFjY291bnQuYWRkcmVzc2VzIHNmY2Muc2hvcHBlci1wcm9kdWN0cyBzZmNjLnNob3BwZXItbXlhY2NvdW50LnJ3IHNmY2Muc2hvcHBlci1teWFjY291bnQucGF5bWVudGluc3RydW1lbnRzIHNmY2Muc2hvcHBlci1jdXN0b21lcnMubG9naW4gc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5vcmRlcnMgc2ZjYy5zaG9wcGVyLWN1c3RvbWVycy5yZWdpc3RlciBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5hZGRyZXNzZXMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wcm9kdWN0bGlzdHMucncgc2ZjYy5zaG9wcGVyLXByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItcHJvbW90aW9ucyBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wYXltZW50aW5zdHJ1bWVudHMucncgc2ZjYy5zaG9wcGVyLWdpZnQtY2VydGlmaWNhdGVzIHNmY2Muc2hvcHBlci1wcm9kdWN0LXNlYXJjaCBzZmNjLnNob3BwZXItbXlhY2NvdW50LnByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItY2F0ZWdvcmllcyBzZmNjLnNob3BwZXItbXlhY2NvdW50Iiwic3ViIjoiY2Mtc2xhczo6enpjdV8wNTY6OnNjaWQ6NDZmNDQ2ZjMtNTM5Yy00NWY2LWFlZTQtMzJhOGNlY2RkMTRjOjp1c2lkOjUxZWI3YmZiLWI4NmYtNGE1NC1iYWNmLWYwOGY2NjQ3OTI4YSIsImN0eCI6InNsYXMiLCJpc3MiOiJzbGFzL3Byb2QvenpjdV8wNTYiLCJpc3QiOjEsImF1ZCI6ImNvbW1lcmNlY2xvdWQvcHJvZC96emN1XzA1NiIsIm5iZiI6MTY0Nzg3MDIxNSwic3R5IjoiVXNlciIsImlzYiI6InVpZG86c2xhczo6dXBuOkd1ZXN0Ojp1aWRuOkd1ZXN0IFVzZXI6OmdjaWQ6YWJscmRKd0hCR3hLZ1J3SEUweEdZWXdyc1kiLCJleHAiOjE2NDc4NzIwNDUsImlhdCI6MTY0Nzg3MDI0NSwianRpIjoiQzJDNzAwMzU4OTYwMTk4ODcwNDEwMzU4NDQ5NjMxMDYxMjg2NTYifQ.V7v2qzvJUHevO8KdKzFY3sFJsbUyS0k7sChJPcEiyKS2VzqBig7bIs4hllUWbGS_5EP-2jvK2VtZYl2mnsKysA"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://0dnz6oep.api.commercecloud.salesforce.com/product/shopper-products/v1/organizations/f_ecom_zzcu_056/products/682875540326M?siteId=RefArch",
+					"protocol": "https",
+					"host": [
+						"0dnz6oep",
+						"api",
+						"commercecloud",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"product",
+						"shopper-products",
+						"v1",
+						"organizations",
+						"f_ecom_zzcu_056",
+						"products",
+						"682875540326M"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "RefArch"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3a: Get Shopper Promotions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ2ZXIiOiIxLjAiLCJraWQiOiIxODVkYjQ0Ny01NDAwLTQyNDQtOGJkNy01MzYzNGY4ODMyYjEiLCJ0eXAiOiJqd3QiLCJjbHYiOiJKMi4zLjQiLCJhbGciOiJFUzI1NiJ9.eyJhdXQiOiJHVUlEIiwic2NwIjoic2ZjYy5zaG9wcGVyLW15YWNjb3VudC5iYXNrZXRzIHNmY2Muc2hvcHBlci1teWFjY291bnQuYWRkcmVzc2VzIHNmY2Muc2hvcHBlci1wcm9kdWN0cyBzZmNjLnNob3BwZXItbXlhY2NvdW50LnJ3IHNmY2Muc2hvcHBlci1teWFjY291bnQucGF5bWVudGluc3RydW1lbnRzIHNmY2Muc2hvcHBlci1jdXN0b21lcnMubG9naW4gc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5vcmRlcnMgc2ZjYy5zaG9wcGVyLWN1c3RvbWVycy5yZWdpc3RlciBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5hZGRyZXNzZXMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wcm9kdWN0bGlzdHMucncgc2ZjYy5zaG9wcGVyLXByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItcHJvbW90aW9ucyBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wYXltZW50aW5zdHJ1bWVudHMucncgc2ZjYy5zaG9wcGVyLWdpZnQtY2VydGlmaWNhdGVzIHNmY2Muc2hvcHBlci1wcm9kdWN0LXNlYXJjaCBzZmNjLnNob3BwZXItbXlhY2NvdW50LnByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItY2F0ZWdvcmllcyBzZmNjLnNob3BwZXItbXlhY2NvdW50Iiwic3ViIjoiY2Mtc2xhczo6enpjdV8wNTY6OnNjaWQ6NDZmNDQ2ZjMtNTM5Yy00NWY2LWFlZTQtMzJhOGNlY2RkMTRjOjp1c2lkOjUxZWI3YmZiLWI4NmYtNGE1NC1iYWNmLWYwOGY2NjQ3OTI4YSIsImN0eCI6InNsYXMiLCJpc3MiOiJzbGFzL3Byb2QvenpjdV8wNTYiLCJpc3QiOjEsImF1ZCI6ImNvbW1lcmNlY2xvdWQvcHJvZC96emN1XzA1NiIsIm5iZiI6MTY0Nzg3MDIxNSwic3R5IjoiVXNlciIsImlzYiI6InVpZG86c2xhczo6dXBuOkd1ZXN0Ojp1aWRuOkd1ZXN0IFVzZXI6OmdjaWQ6YWJscmRKd0hCR3hLZ1J3SEUweEdZWXdyc1kiLCJleHAiOjE2NDc4NzIwNDUsImlhdCI6MTY0Nzg3MDI0NSwianRpIjoiQzJDNzAwMzU4OTYwMTk4ODcwNDEwMzU4NDQ5NjMxMDYxMjg2NTYifQ.V7v2qzvJUHevO8KdKzFY3sFJsbUyS0k7sChJPcEiyKS2VzqBig7bIs4hllUWbGS_5EP-2jvK2VtZYl2mnsKysA"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://0dnz6oep.api.commercecloud.salesforce.com/pricing/shopper-promotions/v1/organizations/f_ecom_zzcu_056/promotions?siteId=RefArch&ids=15off-gps",
+					"protocol": "https",
+					"host": [
+						"0dnz6oep",
+						"api",
+						"commercecloud",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"pricing",
+						"shopper-promotions",
+						"v1",
+						"organizations",
+						"f_ecom_zzcu_056",
+						"promotions"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "RefArch"
+						},
+						{
+							"key": "ids",
+							"value": "15off-gps"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4a: Get Shopper Search",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ2ZXIiOiIxLjAiLCJraWQiOiIxODVkYjQ0Ny01NDAwLTQyNDQtOGJkNy01MzYzNGY4ODMyYjEiLCJ0eXAiOiJqd3QiLCJjbHYiOiJKMi4zLjQiLCJhbGciOiJFUzI1NiJ9.eyJhdXQiOiJHVUlEIiwic2NwIjoic2ZjYy5zaG9wcGVyLW15YWNjb3VudC5iYXNrZXRzIHNmY2Muc2hvcHBlci1teWFjY291bnQuYWRkcmVzc2VzIHNmY2Muc2hvcHBlci1wcm9kdWN0cyBzZmNjLnNob3BwZXItbXlhY2NvdW50LnJ3IHNmY2Muc2hvcHBlci1teWFjY291bnQucGF5bWVudGluc3RydW1lbnRzIHNmY2Muc2hvcHBlci1jdXN0b21lcnMubG9naW4gc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5vcmRlcnMgc2ZjYy5zaG9wcGVyLWN1c3RvbWVycy5yZWdpc3RlciBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5hZGRyZXNzZXMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wcm9kdWN0bGlzdHMucncgc2ZjYy5zaG9wcGVyLXByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItcHJvbW90aW9ucyBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wYXltZW50aW5zdHJ1bWVudHMucncgc2ZjYy5zaG9wcGVyLWdpZnQtY2VydGlmaWNhdGVzIHNmY2Muc2hvcHBlci1wcm9kdWN0LXNlYXJjaCBzZmNjLnNob3BwZXItbXlhY2NvdW50LnByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItY2F0ZWdvcmllcyBzZmNjLnNob3BwZXItbXlhY2NvdW50Iiwic3ViIjoiY2Mtc2xhczo6enpjdV8wNTY6OnNjaWQ6NDZmNDQ2ZjMtNTM5Yy00NWY2LWFlZTQtMzJhOGNlY2RkMTRjOjp1c2lkOjUxZWI3YmZiLWI4NmYtNGE1NC1iYWNmLWYwOGY2NjQ3OTI4YSIsImN0eCI6InNsYXMiLCJpc3MiOiJzbGFzL3Byb2QvenpjdV8wNTYiLCJpc3QiOjEsImF1ZCI6ImNvbW1lcmNlY2xvdWQvcHJvZC96emN1XzA1NiIsIm5iZiI6MTY0Nzg3MDIxNSwic3R5IjoiVXNlciIsImlzYiI6InVpZG86c2xhczo6dXBuOkd1ZXN0Ojp1aWRuOkd1ZXN0IFVzZXI6OmdjaWQ6YWJscmRKd0hCR3hLZ1J3SEUweEdZWXdyc1kiLCJleHAiOjE2NDc4NzIwNDUsImlhdCI6MTY0Nzg3MDI0NSwianRpIjoiQzJDNzAwMzU4OTYwMTk4ODcwNDEwMzU4NDQ5NjMxMDYxMjg2NTYifQ.V7v2qzvJUHevO8KdKzFY3sFJsbUyS0k7sChJPcEiyKS2VzqBig7bIs4hllUWbGS_5EP-2jvK2VtZYl2mnsKysA"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://0dnz6oep.api.commercecloud.salesforce.com/search/shopper-search/v1/organizations/f_ecom_zzcu_056/product-search?siteId=RefArch&q=shirt&refine=price",
+					"protocol": "https",
+					"host": [
+						"0dnz6oep",
+						"api",
+						"commercecloud",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"search",
+						"shopper-search",
+						"v1",
+						"organizations",
+						"f_ecom_zzcu_056",
+						"product-search"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "RefArch"
+						},
+						{
+							"key": "q",
+							"value": "shirt"
+						},
+						{
+							"key": "refine",
+							"value": "price"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5a: Post Shopper Basket - Create",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ2ZXIiOiIxLjAiLCJraWQiOiIxODVkYjQ0Ny01NDAwLTQyNDQtOGJkNy01MzYzNGY4ODMyYjEiLCJ0eXAiOiJqd3QiLCJjbHYiOiJKMi4zLjQiLCJhbGciOiJFUzI1NiJ9.eyJhdXQiOiJHVUlEIiwic2NwIjoic2ZjYy5zaG9wcGVyLW15YWNjb3VudC5iYXNrZXRzIHNmY2Muc2hvcHBlci1teWFjY291bnQuYWRkcmVzc2VzIHNmY2Muc2hvcHBlci1wcm9kdWN0cyBzZmNjLnNob3BwZXItbXlhY2NvdW50LnJ3IHNmY2Muc2hvcHBlci1teWFjY291bnQucGF5bWVudGluc3RydW1lbnRzIHNmY2Muc2hvcHBlci1jdXN0b21lcnMubG9naW4gc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5vcmRlcnMgc2ZjYy5zaG9wcGVyLWN1c3RvbWVycy5yZWdpc3RlciBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5hZGRyZXNzZXMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wcm9kdWN0bGlzdHMucncgc2ZjYy5zaG9wcGVyLXByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItcHJvbW90aW9ucyBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wYXltZW50aW5zdHJ1bWVudHMucncgc2ZjYy5zaG9wcGVyLWdpZnQtY2VydGlmaWNhdGVzIHNmY2Muc2hvcHBlci1wcm9kdWN0LXNlYXJjaCBzZmNjLnNob3BwZXItbXlhY2NvdW50LnByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItY2F0ZWdvcmllcyBzZmNjLnNob3BwZXItbXlhY2NvdW50Iiwic3ViIjoiY2Mtc2xhczo6enpjdV8wNTY6OnNjaWQ6NDZmNDQ2ZjMtNTM5Yy00NWY2LWFlZTQtMzJhOGNlY2RkMTRjOjp1c2lkOjUxZWI3YmZiLWI4NmYtNGE1NC1iYWNmLWYwOGY2NjQ3OTI4YSIsImN0eCI6InNsYXMiLCJpc3MiOiJzbGFzL3Byb2QvenpjdV8wNTYiLCJpc3QiOjEsImF1ZCI6ImNvbW1lcmNlY2xvdWQvcHJvZC96emN1XzA1NiIsIm5iZiI6MTY0Nzg3MDIxNSwic3R5IjoiVXNlciIsImlzYiI6InVpZG86c2xhczo6dXBuOkd1ZXN0Ojp1aWRuOkd1ZXN0IFVzZXI6OmdjaWQ6YWJscmRKd0hCR3hLZ1J3SEUweEdZWXdyc1kiLCJleHAiOjE2NDc4NzIwNDUsImlhdCI6MTY0Nzg3MDI0NSwianRpIjoiQzJDNzAwMzU4OTYwMTk4ODcwNDEwMzU4NDQ5NjMxMDYxMjg2NTYifQ.V7v2qzvJUHevO8KdKzFY3sFJsbUyS0k7sChJPcEiyKS2VzqBig7bIs4hllUWbGS_5EP-2jvK2VtZYl2mnsKysA"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"customerInfo\": {\n    \"email\": \"legend@sleepyhollow.com\",\n    \"customerNo\": \"00003501\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"Stephanie\",\n    \"lastName\": \"Miller\",\n    \"address1\": \"104 Presidential Way\",\n    \"city\": \"Woburn\",\n    \"postalCode\": \"01801\",\n    \"stateCode\": \"MA\",\n    \"countryCode\": \"US\"\n  },\n  \"shipments\": [\n    {\n      \"shippingMethod\": {\n        \"id\": \"001\"\n      },\n      \"shippingAddress\": {\n        \"firstName\": \"Agustin\",\n        \"lastName\": \"Estes\",\n        \"address1\": \"4162  Turkey Pen Road\",\n        \"city\": \"New York\",\n        \"postalCode\": \"10016\",\n        \"stateCode\": \"NY\",\n        \"countryCode\": \"US\"\n      }\n    }\n  ],\n  \"paymentInstruments\": [\n    {\n      \"paymentMethodId\": \"CREDIT_CARD\",\n      \"paymentCard\": {\n        \"cardType\": \"Visa\"\n      }\n    }\n  ],\n  \"couponItems\": [\n    {\n      \"code\": \"5ties\"\n    }\n  ],\n  \"productItems\": [\n    {\n      \"productId\": \"701643488438M\",\n      \"quantity\": 3\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "https://0dnz6oep.api.commercecloud.salesforce.com/checkout/shopper-baskets/v1/organizations/f_ecom_zzcu_056/baskets?siteId=RefArch",
+					"protocol": "https",
+					"host": [
+						"0dnz6oep",
+						"api",
+						"commercecloud",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"checkout",
+						"shopper-baskets",
+						"v1",
+						"organizations",
+						"f_ecom_zzcu_056",
+						"baskets"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "RefArch"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5b: Get Shopper Basket - Get",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ2ZXIiOiIxLjAiLCJraWQiOiIxODVkYjQ0Ny01NDAwLTQyNDQtOGJkNy01MzYzNGY4ODMyYjEiLCJ0eXAiOiJqd3QiLCJjbHYiOiJKMi4zLjQiLCJhbGciOiJFUzI1NiJ9.eyJhdXQiOiJHVUlEIiwic2NwIjoic2ZjYy5zaG9wcGVyLW15YWNjb3VudC5iYXNrZXRzIHNmY2Muc2hvcHBlci1teWFjY291bnQuYWRkcmVzc2VzIHNmY2Muc2hvcHBlci1wcm9kdWN0cyBzZmNjLnNob3BwZXItbXlhY2NvdW50LnJ3IHNmY2Muc2hvcHBlci1teWFjY291bnQucGF5bWVudGluc3RydW1lbnRzIHNmY2Muc2hvcHBlci1jdXN0b21lcnMubG9naW4gc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5vcmRlcnMgc2ZjYy5zaG9wcGVyLWN1c3RvbWVycy5yZWdpc3RlciBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5hZGRyZXNzZXMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wcm9kdWN0bGlzdHMucncgc2ZjYy5zaG9wcGVyLXByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItcHJvbW90aW9ucyBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wYXltZW50aW5zdHJ1bWVudHMucncgc2ZjYy5zaG9wcGVyLWdpZnQtY2VydGlmaWNhdGVzIHNmY2Muc2hvcHBlci1wcm9kdWN0LXNlYXJjaCBzZmNjLnNob3BwZXItbXlhY2NvdW50LnByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItY2F0ZWdvcmllcyBzZmNjLnNob3BwZXItbXlhY2NvdW50Iiwic3ViIjoiY2Mtc2xhczo6enpjdV8wNTY6OnNjaWQ6NDZmNDQ2ZjMtNTM5Yy00NWY2LWFlZTQtMzJhOGNlY2RkMTRjOjp1c2lkOjUxZWI3YmZiLWI4NmYtNGE1NC1iYWNmLWYwOGY2NjQ3OTI4YSIsImN0eCI6InNsYXMiLCJpc3MiOiJzbGFzL3Byb2QvenpjdV8wNTYiLCJpc3QiOjEsImF1ZCI6ImNvbW1lcmNlY2xvdWQvcHJvZC96emN1XzA1NiIsIm5iZiI6MTY0Nzg3MDIxNSwic3R5IjoiVXNlciIsImlzYiI6InVpZG86c2xhczo6dXBuOkd1ZXN0Ojp1aWRuOkd1ZXN0IFVzZXI6OmdjaWQ6YWJscmRKd0hCR3hLZ1J3SEUweEdZWXdyc1kiLCJleHAiOjE2NDc4NzIwNDUsImlhdCI6MTY0Nzg3MDI0NSwianRpIjoiQzJDNzAwMzU4OTYwMTk4ODcwNDEwMzU4NDQ5NjMxMDYxMjg2NTYifQ.V7v2qzvJUHevO8KdKzFY3sFJsbUyS0k7sChJPcEiyKS2VzqBig7bIs4hllUWbGS_5EP-2jvK2VtZYl2mnsKysA"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"customerInfo\": {\n    \"email\": \"legend@sleepyhollow.com\",\n    \"customerNo\": \"00003501\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"Stephanie\",\n    \"lastName\": \"Miller\",\n    \"address1\": \"104 Presidential Way\",\n    \"city\": \"Woburn\",\n    \"postalCode\": \"01801\",\n    \"stateCode\": \"MA\",\n    \"countryCode\": \"US\"\n  },\n  \"shipments\": [\n    {\n      \"shippingMethod\": {\n        \"id\": \"001\"\n      },\n      \"shippingAddress\": {\n        \"firstName\": \"Agustin\",\n        \"lastName\": \"Estes\",\n        \"address1\": \"4162  Turkey Pen Road\",\n        \"city\": \"New York\",\n        \"postalCode\": \"10016\",\n        \"stateCode\": \"NY\",\n        \"countryCode\": \"US\"\n      }\n    }\n  ],\n  \"paymentInstruments\": [\n    {\n      \"paymentMethodId\": \"CREDIT_CARD\",\n      \"paymentCard\": {\n        \"cardType\": \"Visa\"\n      }\n    }\n  ],\n  \"couponItems\": [\n    {\n      \"code\": \"5ties\"\n    }\n  ],\n  \"productItems\": [\n    {\n      \"productId\": \"701643488438M\",\n      \"quantity\": 3\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "https://0dnz6oep.api.commercecloud.salesforce.com/checkout/shopper-baskets/v1/organizations/f_ecom_zzcu_056/baskets/e12a3f957ac8cf0f31b5633cb6?siteId=RefArch",
+					"protocol": "https",
+					"host": [
+						"0dnz6oep",
+						"api",
+						"commercecloud",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"checkout",
+						"shopper-baskets",
+						"v1",
+						"organizations",
+						"f_ecom_zzcu_056",
+						"baskets",
+						"e12a3f957ac8cf0f31b5633cb6"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "RefArch"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5c: Delete Shopper Basket - Delete",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ2ZXIiOiIxLjAiLCJraWQiOiIxODVkYjQ0Ny01NDAwLTQyNDQtOGJkNy01MzYzNGY4ODMyYjEiLCJ0eXAiOiJqd3QiLCJjbHYiOiJKMi4zLjQiLCJhbGciOiJFUzI1NiJ9.eyJhdXQiOiJHVUlEIiwic2NwIjoic2ZjYy5zaG9wcGVyLW15YWNjb3VudC5iYXNrZXRzIHNmY2Muc2hvcHBlci1teWFjY291bnQuYWRkcmVzc2VzIHNmY2Muc2hvcHBlci1wcm9kdWN0cyBzZmNjLnNob3BwZXItbXlhY2NvdW50LnJ3IHNmY2Muc2hvcHBlci1teWFjY291bnQucGF5bWVudGluc3RydW1lbnRzIHNmY2Muc2hvcHBlci1jdXN0b21lcnMubG9naW4gc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5vcmRlcnMgc2ZjYy5zaG9wcGVyLWN1c3RvbWVycy5yZWdpc3RlciBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5hZGRyZXNzZXMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wcm9kdWN0bGlzdHMucncgc2ZjYy5zaG9wcGVyLXByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItcHJvbW90aW9ucyBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wYXltZW50aW5zdHJ1bWVudHMucncgc2ZjYy5zaG9wcGVyLWdpZnQtY2VydGlmaWNhdGVzIHNmY2Muc2hvcHBlci1wcm9kdWN0LXNlYXJjaCBzZmNjLnNob3BwZXItbXlhY2NvdW50LnByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItY2F0ZWdvcmllcyBzZmNjLnNob3BwZXItbXlhY2NvdW50Iiwic3ViIjoiY2Mtc2xhczo6enpjdV8wNTY6OnNjaWQ6NDZmNDQ2ZjMtNTM5Yy00NWY2LWFlZTQtMzJhOGNlY2RkMTRjOjp1c2lkOjUxZWI3YmZiLWI4NmYtNGE1NC1iYWNmLWYwOGY2NjQ3OTI4YSIsImN0eCI6InNsYXMiLCJpc3MiOiJzbGFzL3Byb2QvenpjdV8wNTYiLCJpc3QiOjEsImF1ZCI6ImNvbW1lcmNlY2xvdWQvcHJvZC96emN1XzA1NiIsIm5iZiI6MTY0Nzg3MDIxNSwic3R5IjoiVXNlciIsImlzYiI6InVpZG86c2xhczo6dXBuOkd1ZXN0Ojp1aWRuOkd1ZXN0IFVzZXI6OmdjaWQ6YWJscmRKd0hCR3hLZ1J3SEUweEdZWXdyc1kiLCJleHAiOjE2NDc4NzIwNDUsImlhdCI6MTY0Nzg3MDI0NSwianRpIjoiQzJDNzAwMzU4OTYwMTk4ODcwNDEwMzU4NDQ5NjMxMDYxMjg2NTYifQ.V7v2qzvJUHevO8KdKzFY3sFJsbUyS0k7sChJPcEiyKS2VzqBig7bIs4hllUWbGS_5EP-2jvK2VtZYl2mnsKysA"
+					}
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"customerInfo\": {\n    \"email\": \"legend@sleepyhollow.com\",\n    \"customerNo\": \"00003501\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"Stephanie\",\n    \"lastName\": \"Miller\",\n    \"address1\": \"104 Presidential Way\",\n    \"city\": \"Woburn\",\n    \"postalCode\": \"01801\",\n    \"stateCode\": \"MA\",\n    \"countryCode\": \"US\"\n  },\n  \"shipments\": [\n    {\n      \"shippingMethod\": {\n        \"id\": \"001\"\n      },\n      \"shippingAddress\": {\n        \"firstName\": \"Agustin\",\n        \"lastName\": \"Estes\",\n        \"address1\": \"4162  Turkey Pen Road\",\n        \"city\": \"New York\",\n        \"postalCode\": \"10016\",\n        \"stateCode\": \"NY\",\n        \"countryCode\": \"US\"\n      }\n    }\n  ],\n  \"paymentInstruments\": [\n    {\n      \"paymentMethodId\": \"CREDIT_CARD\",\n      \"paymentCard\": {\n        \"cardType\": \"Visa\"\n      }\n    }\n  ],\n  \"couponItems\": [\n    {\n      \"code\": \"5ties\"\n    }\n  ],\n  \"productItems\": [\n    {\n      \"productId\": \"701643488438M\",\n      \"quantity\": 3\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "https://0dnz6oep.api.commercecloud.salesforce.com/checkout/shopper-baskets/v1/organizations/f_ecom_zzcu_056/baskets/e12a3f957ac8cf0f31b5633cb6/siteId?siteId=RefArch",
+					"protocol": "https",
+					"host": [
+						"0dnz6oep",
+						"api",
+						"commercecloud",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"checkout",
+						"shopper-baskets",
+						"v1",
+						"organizations",
+						"f_ecom_zzcu_056",
+						"baskets",
+						"e12a3f957ac8cf0f31b5633cb6",
+						"siteId"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "RefArch"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6a: Post Shopper Order - Create",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ2ZXIiOiIxLjAiLCJraWQiOiIxODVkYjQ0Ny01NDAwLTQyNDQtOGJkNy01MzYzNGY4ODMyYjEiLCJ0eXAiOiJqd3QiLCJjbHYiOiJKMi4zLjQiLCJhbGciOiJFUzI1NiJ9.eyJhdXQiOiJHVUlEIiwic2NwIjoic2ZjYy5zaG9wcGVyLW15YWNjb3VudC5iYXNrZXRzIHNmY2Muc2hvcHBlci1teWFjY291bnQuYWRkcmVzc2VzIHNmY2Muc2hvcHBlci1wcm9kdWN0cyBzZmNjLnNob3BwZXItbXlhY2NvdW50LnJ3IHNmY2Muc2hvcHBlci1teWFjY291bnQucGF5bWVudGluc3RydW1lbnRzIHNmY2Muc2hvcHBlci1jdXN0b21lcnMubG9naW4gc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5vcmRlcnMgc2ZjYy5zaG9wcGVyLWN1c3RvbWVycy5yZWdpc3RlciBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5hZGRyZXNzZXMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wcm9kdWN0bGlzdHMucncgc2ZjYy5zaG9wcGVyLXByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItcHJvbW90aW9ucyBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wYXltZW50aW5zdHJ1bWVudHMucncgc2ZjYy5zaG9wcGVyLWdpZnQtY2VydGlmaWNhdGVzIHNmY2Muc2hvcHBlci1wcm9kdWN0LXNlYXJjaCBzZmNjLnNob3BwZXItbXlhY2NvdW50LnByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItY2F0ZWdvcmllcyBzZmNjLnNob3BwZXItbXlhY2NvdW50Iiwic3ViIjoiY2Mtc2xhczo6enpjdV8wNTY6OnNjaWQ6NDZmNDQ2ZjMtNTM5Yy00NWY2LWFlZTQtMzJhOGNlY2RkMTRjOjp1c2lkOjUxZWI3YmZiLWI4NmYtNGE1NC1iYWNmLWYwOGY2NjQ3OTI4YSIsImN0eCI6InNsYXMiLCJpc3MiOiJzbGFzL3Byb2QvenpjdV8wNTYiLCJpc3QiOjEsImF1ZCI6ImNvbW1lcmNlY2xvdWQvcHJvZC96emN1XzA1NiIsIm5iZiI6MTY0Nzg3MDIxNSwic3R5IjoiVXNlciIsImlzYiI6InVpZG86c2xhczo6dXBuOkd1ZXN0Ojp1aWRuOkd1ZXN0IFVzZXI6OmdjaWQ6YWJscmRKd0hCR3hLZ1J3SEUweEdZWXdyc1kiLCJleHAiOjE2NDc4NzIwNDUsImlhdCI6MTY0Nzg3MDI0NSwianRpIjoiQzJDNzAwMzU4OTYwMTk4ODcwNDEwMzU4NDQ5NjMxMDYxMjg2NTYifQ.V7v2qzvJUHevO8KdKzFY3sFJsbUyS0k7sChJPcEiyKS2VzqBig7bIs4hllUWbGS_5EP-2jvK2VtZYl2mnsKysA"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"basketId\": \"e12a3f957ac8cf0f31b5633cb6\"\n}"
+				},
+				"url": {
+					"raw": "https://0dnz6oep.api.commercecloud.salesforce.com/checkout/shopper-orders/v1/organizations/f_ecom_zzcu_056/orders?siteId=RefArch",
+					"protocol": "https",
+					"host": [
+						"0dnz6oep",
+						"api",
+						"commercecloud",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"checkout",
+						"shopper-orders",
+						"v1",
+						"organizations",
+						"f_ecom_zzcu_056",
+						"orders"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "RefArch"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6b: Get Shopper Order",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ2ZXIiOiIxLjAiLCJraWQiOiIxODVkYjQ0Ny01NDAwLTQyNDQtOGJkNy01MzYzNGY4ODMyYjEiLCJ0eXAiOiJqd3QiLCJjbHYiOiJKMi4zLjQiLCJhbGciOiJFUzI1NiJ9.eyJhdXQiOiJHVUlEIiwic2NwIjoic2ZjYy5zaG9wcGVyLW15YWNjb3VudC5iYXNrZXRzIHNmY2Muc2hvcHBlci1teWFjY291bnQuYWRkcmVzc2VzIHNmY2Muc2hvcHBlci1wcm9kdWN0cyBzZmNjLnNob3BwZXItbXlhY2NvdW50LnJ3IHNmY2Muc2hvcHBlci1teWFjY291bnQucGF5bWVudGluc3RydW1lbnRzIHNmY2Muc2hvcHBlci1jdXN0b21lcnMubG9naW4gc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5vcmRlcnMgc2ZjYy5zaG9wcGVyLWN1c3RvbWVycy5yZWdpc3RlciBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5hZGRyZXNzZXMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wcm9kdWN0bGlzdHMucncgc2ZjYy5zaG9wcGVyLXByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItcHJvbW90aW9ucyBzZmNjLnNob3BwZXItYmFza2V0cy1vcmRlcnMucncgc2ZjYy5zaG9wcGVyLW15YWNjb3VudC5wYXltZW50aW5zdHJ1bWVudHMucncgc2ZjYy5zaG9wcGVyLWdpZnQtY2VydGlmaWNhdGVzIHNmY2Muc2hvcHBlci1wcm9kdWN0LXNlYXJjaCBzZmNjLnNob3BwZXItbXlhY2NvdW50LnByb2R1Y3RsaXN0cyBzZmNjLnNob3BwZXItY2F0ZWdvcmllcyBzZmNjLnNob3BwZXItbXlhY2NvdW50Iiwic3ViIjoiY2Mtc2xhczo6enpjdV8wNTY6OnNjaWQ6NDZmNDQ2ZjMtNTM5Yy00NWY2LWFlZTQtMzJhOGNlY2RkMTRjOjp1c2lkOjZkMTIzYWQzLTJhNmYtNGFmNC1iYzg1LTE0YmQ0ZWJmZTM4YyIsImN0eCI6InNsYXMiLCJpc3MiOiJzbGFzL3Byb2QvenpjdV8wNTYiLCJpc3QiOjEsImF1ZCI6ImNvbW1lcmNlY2xvdWQvcHJvZC96emN1XzA1NiIsIm5iZiI6MTY0Nzg3MjM1NSwic3R5IjoiVXNlciIsImlzYiI6InVpZG86c2xhczo6dXBuOkd1ZXN0Ojp1aWRuOkd1ZXN0IFVzZXI6OmdjaWQ6YWJsS29Wa0hsRnhia1JrS2MweEdZWXd1d1kiLCJleHAiOjE2NDc4NzQxODUsImlhdCI6MTY0Nzg3MjM4NSwianRpIjoiQzJDNzAwMzU4OTYwMTk4ODcwNDEwMzU4NDcyMjUyMzc0NzczNTAifQ.f0IbnaC_pd0odpq51LTiwBfGn9-M2DY8FHqdDo_SJP6JPBGi-56Rhu74df8Uzsu75lIaByLHEMM5UveO0SKgsA"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://0dnz6oep.api.commercecloud.salesforce.com/checkout/shopper-orders/v1/organizations/f_ecom_zzcu_056/orders/00000601?siteId=RefArch",
+					"protocol": "https",
+					"host": [
+						"0dnz6oep",
+						"api",
+						"commercecloud",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"checkout",
+						"shopper-orders",
+						"v1",
+						"organizations",
+						"f_ecom_zzcu_056",
+						"orders",
+						"00000601"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "RefArch"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "PUBLIC_GUEST_CODE_CHALLENGE",
+			"value": "5NgWTYJYFUy-Nm8rM5pZm1_ang-LkDA8j8h3DwRQ1Jo"
+		},
+		{
+			"key": "PUBLIC_GUEST_CODE_VERIFIER",
+			"value": "OVsnvpFinJ5hf46WqLIEAeYoJF5ntBEGNlvlr4Qt4mx1YdEDxkBRWwXssy0Y6uzellTPLsr1m6dlzpqV1UXbFOJw7AGwiLRB"
+		}
+	]
+}
